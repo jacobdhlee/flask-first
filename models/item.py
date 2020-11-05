@@ -32,12 +32,14 @@ class ItemModel:
         connection.commit()
         connection.close()
 
-    def deleteItem(self):
+    @classmethod
+    def deleteItem(cls, name):
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
 
         query = "DELETE FROM items WHERE name=?"
-        cursor.execute(query, (self.name,))
+        print('name ', name)
+        cursor.execute(query, (name,))
         connection.commit()
         connection.close()
 
