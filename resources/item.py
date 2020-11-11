@@ -35,31 +35,23 @@ class Item(Resource):
         return item.json(), 201
 
     def delete(self, name):
-        if ItemModel.find_by_name(name) is None:
-            return {"message": "item is not exist"}
-        else:
-            try:
-                ItemModel.deleteItem(name)
-                return {"message": "item deleted"}
+        item = ItemModel.find_by_name(name)
+        if item:
+            ItemModel.deleteItem()
 
-            except:
-                return {"message": "error was occured while deleting item"}
+        return {'message': 'Item deleted'}, 204
 
     def put(self, name):
         if ItemModel.find_by_name(name) is None:
             return {"message": 'there is no such item, {}'.format(name)}, 400
         data = Item.parser.parse_args()
-        item = ItemModel(name, data['price'])
+        item = ItemModel.find_by_name(name)
         if data is None:
-            try:
-                item.registerItem()
-            except:
-                return {"message": "error was occured while register item"}
+            item = ItemModel(name, data['price'])
         else:
-            try:
-                item.updateItem()
-            except:
-                return {"message": "error was occured while update item"}
+            item.price = data['price']
+
+        item.registerItem()
 
         return item.json(), 201
 
